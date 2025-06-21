@@ -3,6 +3,7 @@ package it.epicode.SpringSecurity.JWT.controller;
 import it.epicode.SpringSecurity.JWT.dto.AuthResponse;
 import it.epicode.SpringSecurity.JWT.dto.LoginRequest;
 import it.epicode.SpringSecurity.JWT.dto.RegisterRequest;
+import it.epicode.SpringSecurity.JWT.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

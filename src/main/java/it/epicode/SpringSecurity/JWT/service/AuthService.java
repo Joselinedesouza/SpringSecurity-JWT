@@ -7,6 +7,7 @@ import it.epicode.SpringSecurity.JWT.dto.RegisterRequest;
 import it.epicode.SpringSecurity.JWT.entity.Role;
 import it.epicode.SpringSecurity.JWT.entity.User;
 import it.epicode.SpringSecurity.JWT.repository.UserRepository;
+import it.epicode.SpringSecurity.JWT.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

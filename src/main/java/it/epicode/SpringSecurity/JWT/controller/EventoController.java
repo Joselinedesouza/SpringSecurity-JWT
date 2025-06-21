@@ -1,7 +1,9 @@
 package it.epicode.SpringSecurity.JWT.controller;
 
 
+import it.epicode.SpringSecurity.JWT.dto.EventoDTO;
 import it.epicode.SpringSecurity.JWT.entity.Evento;
+import it.epicode.SpringSecurity.JWT.service.EventoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,7 @@ package it.epicode.SpringSecurity.JWT.controller;
 
 import it.epicode.SpringSecurity.JWT.dto.PrenotazioneDTO;
 import it.epicode.SpringSecurity.JWT.entity.Prenotazione;
+import it.epicode.SpringSecurity.JWT.service.PrenotazioneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

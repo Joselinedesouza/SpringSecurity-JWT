@@ -7,6 +7,7 @@ import it.epicode.SpringSecurity.JWT.entity.Evento;
 import it.epicode.SpringSecurity.JWT.entity.User;
 import it.epicode.SpringSecurity.JWT.exception.ElementoNonTrovatoException;
 import it.epicode.SpringSecurity.JWT.repository.EventoRepository;
+import it.epicode.SpringSecurity.JWT.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

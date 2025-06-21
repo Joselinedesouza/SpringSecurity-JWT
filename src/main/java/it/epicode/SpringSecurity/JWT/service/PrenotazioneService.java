@@ -10,6 +10,7 @@ import it.epicode.SpringSecurity.JWT.exception.PostiEsauritiException;
 import it.epicode.SpringSecurity.JWT.exception.PrenotazioneDuplicataException;
 import it.epicode.SpringSecurity.JWT.repository.EventoRepository;
 import it.epicode.SpringSecurity.JWT.repository.PrenotazioneRepository;
+import it.epicode.SpringSecurity.JWT.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
