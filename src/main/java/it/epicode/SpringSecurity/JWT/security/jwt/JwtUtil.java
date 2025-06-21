@@ -1,4 +1,4 @@
-package it.epicode.SpringSecurity.JWT.service.jwt;
+package it.epicode.SpringSecurity.JWT.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
