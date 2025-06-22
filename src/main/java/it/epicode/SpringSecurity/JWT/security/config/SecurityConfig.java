@@ -25,19 +25,29 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final UserDetailsService userDetailsService;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/eventi/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll() // Registrazione/Login
+                        .requestMatchers(HttpMethod.GET, "/eventi/**").permitAll() // Tutti possono vedere eventi
+
+                        // Solo organizzatori
+                        .requestMatchers(HttpMethod.POST, "/eventi/**").hasRole("ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.PUT, "/eventi/**").hasRole("ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.DELETE, "/eventi/**").hasRole("ORGANIZZATORE")
+
+                        // Prenotazioni - Utenti e Organizzatori possono prenotare
+                        .requestMatchers(HttpMethod.POST, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.GET, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.DELETE, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider());
-                //.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

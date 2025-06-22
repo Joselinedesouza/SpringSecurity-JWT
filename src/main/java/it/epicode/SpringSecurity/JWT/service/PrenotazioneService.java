@@ -1,6 +1,5 @@
 package it.epicode.SpringSecurity.JWT.service;
 
-
 import it.epicode.SpringSecurity.JWT.dto.PrenotazioneDTO;
 import it.epicode.SpringSecurity.JWT.entity.Evento;
 import it.epicode.SpringSecurity.JWT.entity.Prenotazione;
@@ -10,7 +9,6 @@ import it.epicode.SpringSecurity.JWT.exception.PostiEsauritiException;
 import it.epicode.SpringSecurity.JWT.exception.PrenotazioneDuplicataException;
 import it.epicode.SpringSecurity.JWT.repository.EventoRepository;
 import it.epicode.SpringSecurity.JWT.repository.PrenotazioneRepository;
-import it.epicode.SpringSecurity.JWT.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +20,8 @@ public class PrenotazioneService {
 
     private final PrenotazioneRepository prenRepo;
     private final EventoRepository eventoRepo;
-    private final JwtUtil jwtUtil;
 
-    public Prenotazione creaPrenotazione(PrenotazioneDTO dto) {
-        User utente = jwtUtil.getUtenteCorrente();
+    public Prenotazione creaPrenotazione(PrenotazioneDTO dto, User utente) {
         Evento evento = eventoRepo.findById(dto.getEventoId())
                 .orElseThrow(() -> new ElementoNonTrovatoException("Evento non trovato"));
 
@@ -42,6 +38,7 @@ public class PrenotazioneService {
                 .utente(utente)
                 .evento(evento)
                 .dataPrenotazione(dto.getDataPrenotazione())
+                .nota(dto.getNota())
                 .build();
 
         evento.setPostiDisponibili(evento.getPostiDisponibili() - 1);
@@ -50,12 +47,19 @@ public class PrenotazioneService {
         return prenRepo.save(p);
     }
 
-    public List<Prenotazione> getPrenotazioniUtenteCorrente() {
-        User utente = jwtUtil.getUtenteCorrente();
+    public List<Prenotazione> getPrenotazioniUtente(User utente) {
         return prenRepo.findByUtenteId(utente.getId());
     }
 
-    public void eliminaPrenotazione(Long id) {
-        prenRepo.deleteById(id);
+    public void eliminaPrenotazione(Long id, User utente) {
+        Prenotazione prenotazione = prenRepo.findById(id)
+                .orElseThrow(() -> new ElementoNonTrovatoException("Prenotazione non trovata"));
+
+        //aggiunta controlla se l’utente può davvero cancellare questa prenotazione
+        if (!prenotazione.getUtente().getId().equals(utente.getId())) {
+            throw new RuntimeException("Non puoi cancellare questa prenotazione");
+        }
+
+        prenRepo.delete(prenotazione);
     }
 }
