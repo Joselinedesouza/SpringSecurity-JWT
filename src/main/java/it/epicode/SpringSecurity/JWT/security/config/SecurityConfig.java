@@ -1,6 +1,5 @@
 package it.epicode.SpringSecurity.JWT.security.config;
 
-
 import it.epicode.SpringSecurity.JWT.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,16 +27,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
+        http
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/eventi/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll() // Registrazione/Login
+                        .requestMatchers(HttpMethod.GET, "/eventi/**").permitAll() // Tutti possono vedere eventi
+
+                        // Solo organizzatori
+                        .requestMatchers(HttpMethod.POST, "/eventi/**").hasRole("ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.PUT, "/eventi/**").hasRole("ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.DELETE, "/eventi/**").hasRole("ORGANIZZATORE")
+
+                        // Prenotazioni - Utenti e Organizzatori possono prenotare
+                        .requestMatchers(HttpMethod.POST, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.GET, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+                        .requestMatchers(HttpMethod.DELETE, "/prenotazioni/**").hasAnyRole("UTENTE", "ORGANIZZATORE")
+
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean

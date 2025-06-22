@@ -1,5 +1,6 @@
 package it.epicode.SpringSecurity.JWT.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ public class EventoDTO {
     @NotBlank
     private String descrizione;
 
-    @Future
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
     @NotBlank

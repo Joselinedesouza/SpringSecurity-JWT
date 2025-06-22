@@ -12,4 +12,5 @@ public class PrenotazioneDTO {
     private Long eventoId;
 
     private LocalDate dataPrenotazione = LocalDate.now();
+    private String nota;
 }

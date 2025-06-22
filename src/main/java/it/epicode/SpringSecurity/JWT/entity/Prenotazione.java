@@ -18,6 +18,7 @@ public class Prenotazione {
     private Long id;
 
     private LocalDate dataPrenotazione;
+    private String nota;
 
     @ManyToOne
     @JoinColumn(name = "utente_id")
@@ -26,4 +27,5 @@ public class Prenotazione {
     @ManyToOne
     @JoinColumn(name = "evento_id")
     private Evento evento;
+
 }
